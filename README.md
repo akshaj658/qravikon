@@ -111,9 +111,11 @@ Start the app and open `http://localhost:5173/project/demo` (or use the demo lin
 
 ## Deployment
 
-The Vercel web project must use the repository root so Vercel can read the root npm workspace manifest, lockfile, and `vercel.json`. In **Project Settings → Build and Development Settings**, set **Root Directory** to `.` (the repository root) and enable inclusion of files outside the root directory if that option is shown. Set the **Framework Preset** to **Vite**. The root `vercel.json` runs `npm ci`, builds only the `@qravikon/web` workspace with `npm run build:web`, publishes `apps/web/dist`, and rewrites frontend routes to the Vite entry point. Do not set the Root Directory to `apps/web` or configure the root full-stack `npm run build` for the frontend project.
+The Vercel web project can use either supported root layout:
 
-- **Web on Vercel:** configure the `VITE_` variables at build time. The root `build:web` script does not build the API. Vercel installs the npm workspaces from the root lockfile; it does not run the API build script.
+- **Monorepo root:** set **Root Directory** to `.` (the repository root), enable inclusion of files outside the root directory if Vercel offers that option, and use the **Vite** framework preset. The root `vercel.json` runs `npm ci`, builds only the web workspace with `npm run build:web`, publishes `apps/web/dist`, and rewrites frontend routes to the Vite entry point.
+- **Web package root:** set **Root Directory** to `apps/web` and use the **Vite** framework preset. `apps/web/vercel.json` runs the web package's `npm run build` script and publishes `dist`. If Dashboard build overrides are configured, set the build command to `npm run build` and the output directory to `dist`, or clear the overrides to use this package-level config.
+- **Web on Vercel:** either layout builds only the frontend, not the API. Configure the `VITE_` variables at build time. Both installs use the root npm workspace lockfile.
 - **API:** install with `npm ci`, build with `npm run build:api`, then start with `npm run start -w apps/api`. Configure the backend variables and set `CLIENT_URL` to the deployed web origin.
 - Configure the production web URL and password-reset redirect in Supabase Auth. Apply and verify database migrations separately.
 
