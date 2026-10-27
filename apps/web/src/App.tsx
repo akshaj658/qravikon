@@ -24,10 +24,22 @@ function ProtectedRoute({ children, allowDemo = false }: { children: React.React
   if (!configured) {
     return allowDemo
       ? <>{children}</>
-      : <Navigate to="/auth/login" replace state={{ from: location.pathname }} />;
+      : <Navigate
+          to="/auth/login"
+          replace
+          state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+        />;
   }
 
-  if (!user) return <Navigate to="/auth/login" replace state={{ from: location.pathname }} />;
+  if (!user) {
+    return (
+      <Navigate
+        to="/auth/login"
+        replace
+        state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+      />
+    );
+  }
   return <>{children}</>;
 }
 
@@ -44,7 +56,7 @@ function ProjectRoute() {
 function AppRoutes() {
   const { user, loading } = useAuth();
   const location = useLocation();
-  const returnTo = (location.state as { from?: string } | null)?.from ?? '/dashboard';
+  const returnTo = (location.state as { from?: string } | null)?.from ?? '/';
 
   return (
     <Routes>

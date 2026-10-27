@@ -12,7 +12,7 @@ export default function AuthPage({ mode }: AuthPageProps) {
   const { signIn, signUp, resetPassword, configured, authError } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const returnTo = (location.state as { from?: string } | null)?.from ?? '/dashboard';
+  const returnTo = (location.state as { from?: string } | null)?.from ?? '/';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

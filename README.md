@@ -113,7 +113,7 @@ Start the app and open `http://localhost:5173/project/demo` (or use the demo lin
 
 Build from the repository root so npm can use the workspace lockfile:
 
-- **Web:** install with `npm ci`, build with `npm run build:web`, and serve `apps/web/dist` as a static site. Configure the `VITE_` variables at build time.
+- **Web on Vercel:** use the repository root as the project root so Vercel can access the npm workspace lockfile. The root `vercel.json` builds the web workspace, serves `apps/web/dist`, and rewrites frontend routes to the Vite entry point so direct navigation and refresh work. Configure the `VITE_` variables at build time.
 - **API:** install with `npm ci`, build with `npm run build:api`, then start with `npm run start -w apps/api`. Configure the backend variables and set `CLIENT_URL` to the deployed web origin.
 - Configure the production web URL and password-reset redirect in Supabase Auth. Apply and verify database migrations separately.
 
