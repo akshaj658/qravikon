@@ -1,0 +1,196 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    border-color: theme('colors.border.default');
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: theme('colors.bg.base');
+    color: theme('colors.text.primary');
+  }
+
+  ::selection {
+    background-color: theme('colors.accent.ring');
+    color: theme('colors.text.primary');
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: theme('colors.border.muted');
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.text.disabled');
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: theme('colors.text.primary');
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  input, textarea, select {
+    outline: none;
+  }
+
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85em;
+  }
+}
+
+@layer components {
+  /* Dividers */
+  .divider {
+    @apply border-t border-border-default;
+  }
+
+  .divider-subtle {
+    @apply border-t border-border-subtle;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium
+           transition-all duration-150 cursor-pointer select-none
+           disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-accent text-white hover:bg-accent-hover active:bg-accent-dim;
+  }
+
+  .btn-secondary {
+    @apply btn bg-bg-elevated text-text-primary border border-border-default
+           hover:bg-bg-overlay hover:border-border-muted;
+  }
+
+  .btn-ghost {
+    @apply btn text-text-secondary hover:text-text-primary hover:bg-bg-elevated;
+  }
+
+  .btn-danger {
+    @apply btn bg-danger/10 text-danger border border-danger/20
+           hover:bg-danger/20;
+  }
+
+  .btn-sm {
+    @apply px-2.5 py-1 text-xs;
+  }
+
+  .btn-lg {
+    @apply px-5 py-2.5 text-base;
+  }
+
+  /* Inputs */
+  .input {
+    @apply w-full px-3 py-2 rounded bg-bg-surface border border-border-default
+           text-text-primary placeholder:text-text-muted text-sm
+           focus:border-accent focus:ring-1 focus:ring-accent-ring
+           transition-all duration-150;
+  }
+
+  .textarea {
+    @apply input resize-none;
+  }
+
+  /* Cards */
+  .card {
+    @apply bg-bg-surface border border-border-default rounded-md;
+  }
+
+  .card-elevated {
+    @apply bg-bg-elevated border border-border-default rounded-md shadow-sm;
+  }
+
+  /* Labels */
+  .label {
+    @apply block text-xs font-medium text-text-secondary mb-1.5;
+  }
+
+  /* Badges */
+  .badge {
+    @apply inline-flex items-center px-1.5 py-0.5 rounded text-2xs font-medium;
+  }
+
+  .badge-default {
+    @apply badge bg-bg-overlay text-text-secondary;
+  }
+
+  .badge-success {
+    @apply badge bg-success-subtle text-success;
+  }
+
+  .badge-warning {
+    @apply badge bg-warning-subtle text-warning;
+  }
+
+  .badge-danger {
+    @apply badge bg-danger-subtle text-danger;
+  }
+
+  .badge-accent {
+    @apply badge bg-accent-subtle text-accent;
+  }
+
+  /* Navigation item */
+  .nav-item {
+    @apply flex items-center gap-2.5 px-2.5 py-1.5 rounded text-sm text-text-secondary
+           hover:text-text-primary hover:bg-bg-elevated
+           transition-all duration-150 cursor-pointer;
+  }
+
+  .nav-item-active {
+    @apply nav-item text-text-primary bg-bg-elevated;
+  }
+
+  /* Section headings */
+  .section-label {
+    @apply text-2xs font-semibold uppercase tracking-widest text-text-muted;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .writing-mode-vertical {
+    writing-mode: vertical-rl;
+  }
+}
