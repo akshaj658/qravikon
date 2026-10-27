@@ -111,9 +111,9 @@ Start the app and open `http://localhost:5173/project/demo` (or use the demo lin
 
 ## Deployment
 
-Build from the repository root so npm can use the workspace lockfile:
+The Vercel web project must use the repository root so Vercel can read the root npm workspace manifest, lockfile, and `vercel.json`. In **Project Settings → Build and Development Settings**, set **Root Directory** to `.` (the repository root) and enable inclusion of files outside the root directory if that option is shown. Set the **Framework Preset** to **Vite**. The root `vercel.json` runs `npm ci`, builds only the `@qravikon/web` workspace with `npm run build:web`, publishes `apps/web/dist`, and rewrites frontend routes to the Vite entry point. Do not set the Root Directory to `apps/web` or configure the root full-stack `npm run build` for the frontend project.
 
-- **Web on Vercel:** use the repository root as the project root so Vercel can access the npm workspace lockfile. The root `vercel.json` builds the web workspace, serves `apps/web/dist`, and rewrites frontend routes to the Vite entry point so direct navigation and refresh work. Configure the `VITE_` variables at build time.
+- **Web on Vercel:** configure the `VITE_` variables at build time. The root `build:web` script does not build the API. Vercel installs the npm workspaces from the root lockfile; it does not run the API build script.
 - **API:** install with `npm ci`, build with `npm run build:api`, then start with `npm run start -w apps/api`. Configure the backend variables and set `CLIENT_URL` to the deployed web origin.
 - Configure the production web URL and password-reset redirect in Supabase Auth. Apply and verify database migrations separately.
 
