@@ -249,16 +249,27 @@ function NewProjectModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4 [padding-bottom:max(1rem,env(safe-area-inset-bottom))]">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        aria-label="Close new project dialog"
+        onClick={onClose}
+      />
       <motion.div
         initial={{ opacity: 0, scale: 0.96, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.96, y: 8 }}
         transition={{ duration: 0.15 }}
-        className="relative bg-bg-surface border border-border-default rounded-md shadow-lg w-full max-w-md p-6"
+        className="relative my-auto max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-md border border-border-default bg-bg-surface p-4 shadow-lg sm:p-6"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="new-project-title"
+        onKeyDown={event => {
+          if (event.key === 'Escape' && !loading) onClose();
+        }}
       >
-        <h2 className="text-base font-semibold mb-1">New project</h2>
+        <h2 id="new-project-title" className="text-base font-semibold mb-1">New project</h2>
         <p className="text-xs text-text-muted mb-5">Describe your startup idea to get started.</p>
 
         {error && (
@@ -296,12 +307,12 @@ function NewProjectModal({
           </div>
         </div>
 
-        <div className="flex gap-2 justify-end">
-          <button className="btn-secondary" onClick={onClose} disabled={loading}>
+        <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
+          <button className="btn-secondary w-full justify-center sm:w-auto" onClick={onClose} disabled={loading}>
             Cancel
           </button>
           <button
-            className="btn-primary"
+            className="btn-primary w-full justify-center sm:w-auto"
             onClick={handleCreate}
             disabled={!name.trim() || idea.trim().length < 10 || loading}
             id="create-project-btn"
@@ -329,21 +340,34 @@ function DeleteConfirmModal({
   deleting: boolean;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => !deleting && onCancel()} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4 [padding-bottom:max(1rem,env(safe-area-inset-bottom))]">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        aria-label="Close delete project dialog"
+        onClick={() => !deleting && onCancel()}
+        disabled={deleting}
+      />
       <motion.div
         initial={{ opacity: 0, scale: 0.96 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative bg-bg-surface border border-border-default rounded-md shadow-lg w-full max-w-sm p-6"
+        className="relative my-auto max-h-[calc(100dvh-2rem)] w-full max-w-sm overflow-y-auto rounded-md border border-border-default bg-bg-surface p-4 shadow-lg sm:p-6"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="delete-project-title"
+        aria-describedby="delete-project-description"
+        onKeyDown={event => {
+          if (event.key === 'Escape' && !deleting) onCancel();
+        }}
       >
-        <h2 className="text-base font-semibold mb-1">Delete project?</h2>
-        <p className="text-sm text-text-secondary mb-6">
+        <h2 id="delete-project-title" className="text-base font-semibold mb-1">Delete project?</h2>
+        <p id="delete-project-description" className="text-sm text-text-secondary mb-6">
           This will permanently delete <strong>{projectName}</strong>, its findings, sources, and Copilot conversations.
           This cannot be undone.
         </p>
-        <div className="flex gap-2 justify-end">
-          <button className="btn-secondary" onClick={onCancel} disabled={deleting}>Cancel</button>
-          <button className="btn-danger" onClick={onConfirm} id="confirm-delete-btn" disabled={deleting}>{deleting ? 'Deleting…' : 'Delete'}</button>
+        <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
+          <button className="btn-secondary w-full justify-center sm:w-auto" onClick={onCancel} disabled={deleting}>Cancel</button>
+          <button className="btn-danger w-full justify-center sm:w-auto" onClick={onConfirm} id="confirm-delete-btn" disabled={deleting}>{deleting ? 'Deleting…' : 'Delete'}</button>
         </div>
       </motion.div>
     </div>
@@ -440,7 +464,7 @@ export default function DashboardPage() {
   return (
     <AppShell>
         {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle px-5 py-4 sm:px-7">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle px-4 py-4 sm:px-7">
           <div>
             <h1 className="text-base font-semibold text-text-primary">Projects</h1>
             <p className="mt-0.5 text-xs text-text-muted">Manage and continue your startup validation projects.</p>
@@ -450,8 +474,8 @@ export default function DashboardPage() {
               </p>
             )}
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="relative">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+            <div className="relative w-full sm:w-auto">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-muted" />
               <input
                 className="input h-8 w-full pl-8 text-xs sm:w-52"
@@ -492,7 +516,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-auto p-5 sm:p-7">
+        <div className="flex-1 overflow-auto p-4 sm:p-7">
           {!isDemo && (
             <section aria-label="Project statistics" className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
               {[

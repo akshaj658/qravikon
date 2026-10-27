@@ -62,14 +62,14 @@ export default function AuthPage({ mode }: AuthPageProps) {
     <div className="min-h-screen bg-bg-base flex flex-col">
       {/* Nav */}
       <header className="border-b border-border-subtle">
-        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center">
+        <div className="mx-auto flex h-14 max-w-6xl items-center px-4 sm:px-6">
           <Link to="/" aria-label="Qravikon home">
             <BrandLogo />
           </Link>
         </div>
       </header>
 
-      <div className="flex-1 flex items-center justify-center px-6 py-16">
+      <div className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6 sm:py-16">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -154,8 +154,9 @@ export default function AuthPage({ mode }: AuthPageProps) {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition-colors"
-                    tabIndex={-1}
+                    className="absolute right-1 top-1/2 flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center text-text-muted transition-colors hover:text-text-secondary"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>

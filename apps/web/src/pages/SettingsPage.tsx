@@ -115,15 +115,15 @@ export default function SettingsPage() {
 
   return (
     <AppShell>
-      <header className="border-b border-border-subtle px-5 py-4 sm:px-7">
+      <header className="border-b border-border-subtle px-4 py-4 sm:px-7">
         <h1 className="text-base font-semibold text-text-primary">Settings</h1>
         <p className="mt-0.5 text-xs text-text-muted">Manage your profile and account access.</p>
       </header>
-      <div className="w-full max-w-3xl flex-1 space-y-5 overflow-auto p-5 sm:p-7">
+      <div className="w-full max-w-3xl flex-1 space-y-5 overflow-auto p-4 sm:p-7">
         {error && <div className="flex items-start gap-2 rounded border border-danger/30 bg-danger-subtle p-3 text-xs text-danger" role="alert"><AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />{error}</div>}
         {notice && <div className="flex items-start gap-2 rounded border border-success/30 bg-success-subtle p-3 text-xs text-success" role="status"><CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />{notice}</div>}
 
-        <section className="rounded border border-border-default bg-bg-surface p-5">
+        <section className="rounded border border-border-default bg-bg-surface p-4 sm:p-5">
           <div className="mb-5 flex items-center gap-2">
             <UserRound className="h-4 w-4 text-accent" />
             <div>
@@ -147,7 +147,7 @@ export default function SettingsPage() {
           </form>
         </section>
 
-        <section className="rounded border border-border-default bg-bg-surface p-5">
+        <section className="rounded border border-border-default bg-bg-surface p-4 sm:p-5">
           <div className="mb-4 flex items-center gap-2">
             <KeyRound className="h-4 w-4 text-accent" />
             <div>
@@ -155,8 +155,8 @@ export default function SettingsPage() {
               <p className="text-xs text-text-muted">Email and password actions use Supabase Auth.</p>
             </div>
           </div>
-          <form onSubmit={requestEmailChange} className="mb-5 flex max-w-xl flex-wrap items-end gap-2">
-            <div className="min-w-[220px] flex-1">
+          <form onSubmit={requestEmailChange} className="mb-5 flex max-w-xl flex-col items-stretch gap-2 sm:flex-row sm:items-end">
+            <div className="w-full min-w-0 flex-1 sm:min-w-[220px]">
               <label className="label" htmlFor="new-account-email">Request email change</label>
               <input id="new-account-email" className="input" type="email" value={email} onChange={event => setEmail(event.target.value)} autoComplete="email" disabled={savingEmail} />
             </div>

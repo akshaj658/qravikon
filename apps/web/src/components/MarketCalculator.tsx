@@ -166,15 +166,15 @@ export default function MarketCalculator({ initialData, onChange, onValidityChan
       </div>
 
       {/* Key numbers */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
         {[
           { label: 'TAM', value: currentScenario.tam, desc: 'Total addressable market' },
           { label: 'SAM', value: currentScenario.sam, desc: 'Serviceable addressable market' },
           { label: 'SOM', value: currentScenario.som, desc: 'Serviceable obtainable market' },
         ].map(({ label, value, desc }) => (
-          <div key={label} className="bg-bg-elevated rounded border border-border-default p-4">
+          <div key={label} className="rounded border border-border-default bg-bg-elevated p-3 sm:p-4">
             <div className="text-2xs text-text-muted mb-1">{label}</div>
-            <div className="text-2xl font-semibold text-text-primary">{formatCurrency(value)}</div>
+            <div className="text-xl font-semibold text-text-primary sm:text-2xl">{formatCurrency(value)}</div>
             <div className="text-2xs text-text-disabled mt-0.5">{desc}</div>
           </div>
         ))}
@@ -225,7 +225,7 @@ export default function MarketCalculator({ initialData, onChange, onValidityChan
             <span className="text-danger">Fix validation errors to recalculate.</span>
           </div>
         )}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {[
             { key: 'totalPotentialCustomers', label: 'Total potential customers', type: 'number', min: 1 },
             { key: 'annualRevenuePerCustomer', label: 'Annual revenue per customer ($)', type: 'number', min: 1 },

@@ -654,7 +654,7 @@ function TargetCustomerStage({
         <p className="text-sm text-text-secondary">{result.buyerVsUser}</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <div className="section-label mb-2">Characteristics</div>
           <ul className="space-y-1">
@@ -996,7 +996,7 @@ function DifferentiationStage({
             </div>
             <p className="text-xs text-text-secondary mb-3">{s.description}</p>
             <p className="text-xs text-text-muted italic mb-3">"{s.positioning}"</p>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
                 <div className="text-2xs text-success font-medium mb-1">Pros</div>
                 {s.pros.map((p, i) => <p key={i} className="text-xs text-text-secondary">+ {p}</p>)}
@@ -1408,10 +1408,12 @@ function CopilotPanel({
   projectId,
   isDemo,
   activeStage,
+  onClose,
 }: {
   projectId: string;
   isDemo?: boolean;
   activeStage: StageKey;
+  onClose: () => void;
 }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -1755,14 +1757,19 @@ function CopilotPanel({
             <MessageSquare className="h-3.5 w-3.5 flex-shrink-0 text-accent" />
             <span className="text-xs font-medium text-text-primary">Copilot</span>
           </div>
-          {!isDemo && <div className="flex flex-shrink-0 items-center gap-1">
-            <button type="button" className="btn-ghost btn-sm px-2" onClick={() => setHistoryOpen(true)} disabled={streaming} aria-label="Conversation history">
-              <History className="h-3.5 w-3.5" /><span>History</span>
+          <div className="flex flex-shrink-0 items-center gap-1">
+            <button type="button" className="btn-ghost btn-sm min-h-10 px-2 xl:hidden" onClick={onClose} aria-label="Close Copilot">
+              <X className="h-4 w-4" />
             </button>
-            <button type="button" className="btn-ghost btn-sm px-1.5" onClick={createConversation} disabled={streaming || loadingConversations} aria-label="New conversation" title="New conversation">
-              <Plus className="h-3.5 w-3.5" />
-            </button>
-          </div>}
+            {!isDemo && <>
+          <button type="button" className="btn-ghost btn-sm px-2" onClick={() => setHistoryOpen(true)} disabled={streaming} aria-label="Conversation history">
+            <History className="h-3.5 w-3.5" /><span>History</span>
+          </button>
+          <button type="button" className="btn-ghost btn-sm px-1.5" onClick={createConversation} disabled={streaming || loadingConversations} aria-label="New conversation" title="New conversation">
+            <Plus className="h-3.5 w-3.5" />
+          </button>
+            </>}
+          </div>
         </div>
         <p className="mt-0.5 truncate text-2xs text-text-muted">
           {conversations.find(item => item.id === activeConversationId)?.title ?? 'Project-aware AI assistant'}
@@ -1923,7 +1930,9 @@ export default function WorkspacePage() {
   const [error, setError] = useState<string | null>(null);
   const [requiresSignIn, setRequiresSignIn] = useState(false);
   const [activeStage, setActiveStage] = useState<StageKey | 'completion'>('idea_clarification');
-  const [copilotOpen, setCopilotOpen] = useState(true);
+  const [copilotOpen, setCopilotOpen] = useState(() => (
+    typeof window !== 'undefined' && window.matchMedia('(min-width: 1280px)').matches
+  ));
   const [lastFailedStage, setLastFailedStage] = useState<StageKey | null>(null);
   const [blockedByStage, setBlockedByStage] = useState<StageKey | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
@@ -1935,6 +1944,17 @@ export default function WorkspacePage() {
     action: 'approve' | 'revise' | 'skip' | 'save';
     payload?: string | ClarificationEdits | MarketSizingEdits;
   } | null>(null);
+
+  useEffect(() => {
+    if (!copilotOpen) return;
+    function closeDrawerOnEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape' && window.matchMedia('(max-width: 1279px)').matches) {
+        setCopilotOpen(false);
+      }
+    }
+    window.addEventListener('keydown', closeDrawerOnEscape);
+    return () => window.removeEventListener('keydown', closeDrawerOnEscape);
+  }, [copilotOpen]);
 
   const loadProject = useCallback(async () => {
     if (isDemo || !projectId) return;
@@ -2485,22 +2505,22 @@ export default function WorkspacePage() {
   };
 
   return (
-    <div className="h-screen h-[100dvh] min-w-0 overflow-hidden bg-bg-base flex flex-col">
+    <div className="flex h-[100dvh] min-w-0 flex-col overflow-hidden bg-bg-base">
       {/* Top bar */}
       <header className="border-b border-border-subtle bg-bg-surface flex-shrink-0">
-        <div className="flex items-center px-4 h-12 gap-3">
+        <div className="flex h-12 items-center gap-1.5 px-2 sm:gap-3 sm:px-4">
           <Link to="/dashboard" className="btn-ghost btn-sm py-1">
             <ChevronLeft className="w-4 h-4" />
           </Link>
           <BrandLogo symbolOnly size="small" />
-          <div className="w-px h-5 bg-border-default" />
+          <div className="h-5 w-px bg-border-default" />
           <div className="flex-1 min-w-0">
-            <span className="text-sm font-medium text-text-primary">{project.name}</span>
-            {isDemo && <span className="ml-2 badge badge-warning">Interactive Demo</span>}
+            <span className="block truncate text-sm font-medium text-text-primary">{project.name}</span>
+            {isDemo && <span className="ml-2 hidden badge badge-warning sm:inline-flex">Interactive Demo</span>}
           </div>
           {isDemo && (
-            <div className="flex flex-shrink-0 items-center gap-1">
-              <button type="button" className="btn-ghost btn-sm px-2" onClick={resetDemo}>
+            <div className="flex flex-shrink-0 items-center gap-0.5 sm:gap-1">
+              <button type="button" className="btn-ghost btn-sm min-h-10 px-2" onClick={resetDemo} aria-label="Reset demo" title="Reset demo">
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Reset Demo</span>
               </button>
@@ -2516,17 +2536,19 @@ export default function WorkspacePage() {
             </div>
           )}
           <button
-            className="btn-ghost btn-sm"
+            className="btn-ghost btn-sm min-h-10 px-2"
             onClick={() => setCopilotOpen(!copilotOpen)}
+            aria-expanded={copilotOpen}
+            aria-controls="copilot-panel"
           >
             <MessageSquare className="w-4 h-4" />
-            Copilot
+            <span className="hidden sm:inline">Copilot</span>
           </button>
         </div>
       </header>
 
       {error && (
-        <div className="px-4 py-2 bg-danger-subtle border-b border-danger/20 flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 border-b border-danger/20 bg-danger-subtle px-4 py-2">
           <AlertCircle className="w-4 h-4 text-danger flex-shrink-0" />
           <p className="text-xs text-danger flex-1">{error}</p>
           {(lastFailedStage || retryStageAction) && (
@@ -2591,8 +2613,32 @@ export default function WorkspacePage() {
 
       {/* Main layout */}
       <div className="relative flex flex-1 min-h-0 min-w-0 overflow-hidden">
+        <nav className="absolute inset-x-0 top-0 z-10 flex min-w-0 touch-pan-x gap-1 overflow-x-auto overscroll-x-contain border-b border-border-subtle bg-bg-surface px-2 py-1.5 md:hidden" aria-label="Workflow stages">
+          {STAGE_ORDER.map((key, index) => {
+            const stageData = getStageData(key);
+            const status = stageData?.status ?? 'pending';
+            const isActive = activeStage === key || (activeStage === 'completion' && key === 'final_report');
+            return (
+              <button
+                key={key}
+                type="button"
+                aria-current={isActive ? 'step' : undefined}
+                aria-label={`Stage ${index + 1}: ${STAGE_LABELS[key]}`}
+                title={STAGE_LABELS[key]}
+                className={cn(
+                  'flex min-h-11 flex-shrink-0 items-center gap-1.5 rounded px-2 text-xs transition-colors',
+                  isActive ? 'bg-bg-elevated text-text-primary' : 'text-text-muted hover:bg-bg-elevated hover:text-text-primary'
+                )}
+                onClick={() => void navigateToStage(key)}
+              >
+                <StageStatusIcon status={status} />
+                <span className="whitespace-nowrap">{index + 1}. {STAGE_LABELS[key]}</span>
+              </button>
+            );
+          })}
+        </nav>
         {/* Left rail — stage nav */}
-        <aside className="w-36 sm:w-52 flex-shrink-0 border-r border-border-subtle bg-bg-surface overflow-y-auto">
+        <aside className="hidden w-44 flex-shrink-0 overflow-y-auto border-r border-border-subtle bg-bg-surface md:block lg:w-52">
           <div className="p-3">
             <div className="section-label mb-3 px-2">Workflow</div>
             {isDemo && (
@@ -2625,7 +2671,7 @@ export default function WorkspacePage() {
                   <button
                     key={key}
                     className={cn(
-                      'w-full flex items-center gap-2.5 px-2 py-2 rounded text-left transition-all duration-150',
+                      'min-h-11 w-full flex items-center gap-2.5 px-2 py-2 rounded text-left transition-all duration-150',
                       isActive
                         ? 'bg-bg-elevated text-text-primary'
                         : 'text-text-muted hover:text-text-secondary hover:bg-bg-elevated/50'
@@ -2648,10 +2694,10 @@ export default function WorkspacePage() {
 
         {/* Main content */}
         <main className="min-w-0 flex-1 overflow-y-auto">
-          <div className="max-w-3xl mx-auto px-3 sm:px-6 py-6">
+          <div className="mx-auto max-w-3xl px-3 pt-16 sm:px-6 sm:py-6 md:pt-6">
             {/* Stage header */}
             <div className="mb-6">
-              <div className="flex items-center gap-2 text-2xs text-text-muted mb-2">
+              <div className="mb-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs text-text-muted">
                 <span>{activeStage === 'completion' ? 'Completion' : `Stage ${STAGE_ORDER.indexOf(activeStage) + 1}/8`}</span>
                 <span>·</span>
                 <span>{activeStage === 'completion' ? 'Completion and Next Steps' : STAGE_LABELS[activeStage]}</span>
@@ -2700,7 +2746,7 @@ export default function WorkspacePage() {
                     <p><span className="text-text-secondary">Builds on:</span> {guide.uses}</p>
                     <p><span className="text-text-secondary">You’ll receive:</span> {guide.output}</p>
                   </div>
-                  <div className="flex items-center justify-between gap-3 mt-3 pt-2 border-t border-border-subtle">
+                  <div className="mt-3 flex flex-col gap-3 border-t border-border-subtle pt-2 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-2xs text-text-muted"><span className="text-text-secondary">Recommended next step:</span> {recommendation}</p>
                     {stale && hasResult && (
                       <button className="btn-ghost btn-sm flex-shrink-0" onClick={() => runStage(activeStage)} disabled={stageLoading !== null || isDemo}>
@@ -2746,20 +2792,31 @@ export default function WorkspacePage() {
         {/* Right copilot */}
         <AnimatePresence>
           {copilotOpen && (
-            <motion.aside
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 16 }}
-              transition={{ duration: 0.15 }}
-              className="absolute inset-y-0 right-0 z-20 w-72 max-w-[88vw] border-l border-border-subtle bg-bg-surface overflow-hidden flex min-h-0 min-w-0 flex-col md:relative md:inset-auto md:z-auto md:w-72 md:max-w-none md:flex-shrink-0"
-            >
-              <CopilotPanel
-                key={isDemo ? `demo-${demoResetKey}` : projectId}
-                projectId={projectId!}
-                isDemo={isDemo}
-                activeStage={activeStage === 'completion' ? 'final_report' : activeStage}
+            <>
+              <button
+                type="button"
+                aria-label="Close Copilot"
+                className="absolute inset-0 z-10 bg-black/50 xl:hidden"
+                onClick={() => setCopilotOpen(false)}
               />
-            </motion.aside>
+              <motion.aside
+                id="copilot-panel"
+                initial={{ opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 16 }}
+                transition={{ duration: 0.15 }}
+                aria-label="Copilot chat panel"
+                className="absolute inset-0 z-20 flex min-h-0 min-w-0 flex-col overflow-hidden border-l border-border-subtle bg-bg-surface sm:inset-y-0 sm:left-auto sm:right-0 sm:w-80 sm:max-w-[88vw] xl:relative xl:inset-auto xl:z-auto xl:w-72 xl:max-w-none xl:flex-shrink-0"
+              >
+                <CopilotPanel
+                  key={isDemo ? `demo-${demoResetKey}` : projectId}
+                  projectId={projectId!}
+                  isDemo={isDemo}
+                  activeStage={activeStage === 'completion' ? 'final_report' : activeStage}
+                  onClose={() => setCopilotOpen(false)}
+                />
+              </motion.aside>
+            </>
           )}
         </AnimatePresence>
       </div>
