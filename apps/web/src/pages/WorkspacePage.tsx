@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '../contexts/AuthContext';
+import BrandLogo from '../components/BrandLogo';
 import { api, ApiError, type CopilotConversation, type MarketSizingEdits, type Project, type WorkflowStage, type Message } from '../lib/api';
 import { buildClarificationPayload, readClarificationAnswers } from '../lib/clarification';
 import { createDemoCopilotReply, DEMO_PROJECT, DEMO_STAGES, DEMO_MESSAGES } from '../lib/demo';
@@ -1809,7 +1810,7 @@ function CopilotPanel({
           {allMessages.map(message => (
             <div key={message.id} className={cn('min-w-0 max-w-full text-xs', message.role === 'user' ? 'pl-2 text-text-primary' : '')}>
               <div className={cn('mb-1 text-2xs font-medium', message.role === 'user' ? 'text-text-muted' : 'text-accent')}>
-                {message.role === 'user' ? 'You' : 'Qravikon'}
+                {message.role === 'user' ? 'You' : <BrandLogo size="small" wordmarkClassName="text-2xs font-medium text-accent" />}
               </div>
               {renderMessage(message)}
             </div>
@@ -2491,6 +2492,7 @@ export default function WorkspacePage() {
           <Link to="/dashboard" className="btn-ghost btn-sm py-1">
             <ChevronLeft className="w-4 h-4" />
           </Link>
+          <BrandLogo symbolOnly size="small" />
           <div className="w-px h-5 bg-border-default" />
           <div className="flex-1 min-w-0">
             <span className="text-sm font-medium text-text-primary">{project.name}</span>

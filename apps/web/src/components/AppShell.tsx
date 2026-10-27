@@ -3,6 +3,7 @@ import { ExternalLink, FolderOpen, Home, LogOut, Settings, ChevronRight } from '
 import { Link, NavLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { cn } from '../lib/utils';
+import BrandLogo from './BrandLogo';
 
 export default function AppShell({ children }: { children: ReactNode }) {
   const { user, signOut } = useAuth();
@@ -20,9 +21,12 @@ export default function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen bg-bg-base">
       <aside className="flex w-14 flex-shrink-0 flex-col border-r border-border-subtle bg-bg-surface sm:w-52">
-        <Link to="/dashboard" className="border-b border-border-subtle px-3 py-4 text-center text-sm font-semibold tracking-tight text-text-primary sm:px-4 sm:text-left">
-          <span className="sm:hidden">Q</span>
-          <span className="hidden sm:inline">Qravikon</span>
+        <Link to="/dashboard" aria-label="Qravikon home" className="flex items-center justify-center border-b border-border-subtle px-3 py-4 sm:justify-start sm:px-4">
+          <BrandLogo
+            compact
+            size="small"
+            wordmarkClassName="text-sm font-semibold tracking-tight text-text-primary"
+          />
         </Link>
 
         <nav className="flex-1 space-y-0.5 p-2" aria-label="Main navigation">

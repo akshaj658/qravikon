@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import BrandLogo from '../components/BrandLogo';
 
 const FEATURES = [
   {
@@ -66,8 +67,8 @@ export default function LandingPage() {
       {/* Nav */}
       <header className="sticky top-0 z-50 border-b border-border-subtle bg-bg-base/95 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link to="/" className="text-base font-semibold tracking-tight text-text-primary" aria-label="Qravikon home">
-            Qravikon
+          <Link to="/" aria-label="Qravikon home">
+            <BrandLogo />
           </Link>
           <nav className="flex items-center gap-6">
             {loading ? null : user ? (
@@ -226,7 +227,7 @@ export default function LandingPage() {
                   <p className="text-xs text-text-secondary">What's the risk of strategy 1?</p>
                 </div>
                 <div className="bg-bg-base rounded p-2.5">
-                  <div className="text-2xs text-accent mb-1">Qravikon</div>
+                  <div className="mb-1"><BrandLogo size="small" wordmarkClassName="text-2xs font-medium text-accent" /></div>
                   <p className="text-xs text-text-secondary leading-relaxed">
                     The main risk is platform dependency — Square could add inventory forecasting to its core plan…
                   </p>
@@ -311,7 +312,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-border-subtle py-8">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between text-xs text-text-muted">
-          <span className="font-medium text-text-secondary">Qravikon</span>
+          <BrandLogo size="small" wordmarkClassName="text-xs font-medium text-text-secondary" />
           <span>Ideas deserve evidence.</span>
           <div className="flex gap-4">
             {!loading && (user ? (

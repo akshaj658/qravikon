@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import BrandLogo from '../components/BrandLogo';
 
 interface AuthPageProps {
   mode: 'login' | 'signup' | 'reset';
@@ -62,8 +63,8 @@ export default function AuthPage({ mode }: AuthPageProps) {
       {/* Nav */}
       <header className="border-b border-border-subtle">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center">
-          <Link to="/" className="text-base font-semibold tracking-tight text-text-primary">
-            Qravikon
+          <Link to="/" aria-label="Qravikon home">
+            <BrandLogo />
           </Link>
         </div>
       </header>
